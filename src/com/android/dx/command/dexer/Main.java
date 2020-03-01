@@ -40,6 +40,7 @@ import com.android.dx.rop.annotation.AnnotationsList;
 import com.android.dx.rop.cst.CstNat;
 import com.android.dx.rop.cst.CstString;
 import com.android.dx.util.FileUtils;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -48,6 +49,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -70,37 +72,37 @@ public class Main {
      * people from defining core classes in applications
      */
     private static final String IN_RE_CORE_CLASSES =
-        "Ill-advised or mistaken usage of a core class (java.* or javax.*)\n" +
-        "when not building a core library.\n\n" +
-        "This is often due to inadvertently including a core library file\n" +
-        "in your application's project, when using an IDE (such as\n" +
-        "Eclipse). If you are sure you're not intentionally defining a\n" +
-        "core class, then this is the most likely explanation of what's\n" +
-        "going on.\n\n" +
-        "However, you might actually be trying to define a class in a core\n" +
-        "namespace, the source of which you may have taken, for example,\n" +
-        "from a non-Android virtual machine project. This will most\n" +
-        "assuredly not work. At a minimum, it jeopardizes the\n" +
-        "compatibility of your app with future versions of the platform.\n" +
-        "It is also often of questionable legality.\n\n" +
-        "If you really intend to build a core library -- which is only\n" +
-        "appropriate as part of creating a full virtual machine\n" +
-        "distribution, as opposed to compiling an application -- then use\n" +
-        "the \"--core-library\" option to suppress this error message.\n\n" +
-        "If you go ahead and use \"--core-library\" but are in fact\n" +
-        "building an application, then be forewarned that your application\n" +
-        "will still fail to build or run, at some point. Please be\n" +
-        "prepared for angry customers who find, for example, that your\n" +
-        "application ceases to function once they upgrade their operating\n" +
-        "system. You will be to blame for this problem.\n\n" +
-        "If you are legitimately using some code that happens to be in a\n" +
-        "core package, then the easiest safe alternative you have is to\n" +
-        "repackage that code. That is, move the classes in question into\n" +
-        "your own package namespace. This means that they will never be in\n" +
-        "conflict with core system classes. JarJar is a tool that may help\n" +
-        "you in this endeavor. If you find that you cannot do this, then\n" +
-        "that is an indication that the path you are on will ultimately\n" +
-        "lead to pain, suffering, grief, and lamentation.\n";
+	"Ill-advised or mistaken usage of a core class (java.* or javax.*)\n" +
+	"when not building a core library.\n\n" +
+	"This is often due to inadvertently including a core library file\n" +
+	"in your application's project, when using an IDE (such as\n" +
+	"Eclipse). If you are sure you're not intentionally defining a\n" +
+	"core class, then this is the most likely explanation of what's\n" +
+	"going on.\n\n" +
+	"However, you might actually be trying to define a class in a core\n" +
+	"namespace, the source of which you may have taken, for example,\n" +
+	"from a non-Android virtual machine project. This will most\n" +
+	"assuredly not work. At a minimum, it jeopardizes the\n" +
+	"compatibility of your app with future versions of the platform.\n" +
+	"It is also often of questionable legality.\n\n" +
+	"If you really intend to build a core library -- which is only\n" +
+	"appropriate as part of creating a full virtual machine\n" +
+	"distribution, as opposed to compiling an application -- then use\n" +
+	"the \"--core-library\" option to suppress this error message.\n\n" +
+	"If you go ahead and use \"--core-library\" but are in fact\n" +
+	"building an application, then be forewarned that your application\n" +
+	"will still fail to build or run, at some point. Please be\n" +
+	"prepared for angry customers who find, for example, that your\n" +
+	"application ceases to function once they upgrade their operating\n" +
+	"system. You will be to blame for this problem.\n\n" +
+	"If you are legitimately using some code that happens to be in a\n" +
+	"core package, then the easiest safe alternative you have is to\n" +
+	"repackage that code. That is, move the classes in question into\n" +
+	"your own package namespace. This means that they will never be in\n" +
+	"conflict with core system classes. JarJar is a tool that may help\n" +
+	"you in this endeavor. If you find that you cannot do this, then\n" +
+	"that is an indication that the path you are on will ultimately\n" +
+	"lead to pain, suffering, grief, and lamentation.\n";
 
     /**
      * {@code non-null;} name of the standard manifest file in {@code .jar}
@@ -113,7 +115,7 @@ public class Main {
      * {@code Created-By} attribute
      */
     private static final Attributes.Name CREATED_BY =
-        new Attributes.Name("Created-By");
+	new Attributes.Name("Created-By");
 
     /**
      * {@code non-null;} list of {@code javax} subpackages that are considered
@@ -167,14 +169,13 @@ public class Main {
      * Run and exit if something unexpected happened.
      * @param argArray the command line arguments
      */
-    public static void main(String[] argArray) throws IOException {
+    public static short main(String[] argArray) throws IOException {
         Arguments arguments = new Arguments();
         arguments.parse(argArray);
 
         int result = run(arguments);
-        if (result != 0) {
-            System.exit(result);
-        }
+
+		return (short)result;
     }
 
     /**
@@ -194,7 +195,7 @@ public class Main {
         if (args.incremental) {
             if (args.outName == null) {
                 System.err.println(
-                        "error: no incremental output name specified");
+					"error: no incremental output name specified");
                 return -1;
             }
             incrementalOutFile = new File(args.outName);
@@ -348,12 +349,12 @@ public class Main {
 
         if (warnings != 0) {
             DxConsole.err.println(warnings + " warning" +
-                               ((warnings == 1) ? "" : "s"));
+								  ((warnings == 1) ? "" : "s"));
         }
 
         if (errors != 0) {
             DxConsole.err.println(errors + " error" +
-                    ((errors == 1) ? "" : "s") + "; aborting");
+								  ((errors == 1) ? "" : "s") + "; aborting");
             return false;
         }
 
@@ -385,35 +386,35 @@ public class Main {
         ClassPathOpener opener;
 
         opener = new ClassPathOpener(pathname, false,
-                new ClassPathOpener.Consumer() {
-            public boolean processFileBytes(String name, long lastModified, byte[] bytes) {
-                if (args.numThreads > 1) {
-                    threadPool.execute(new ParallelProcessor(name, lastModified, bytes));
-                    return false;
-                } else {
-                    return Main.processFileBytes(name, lastModified, bytes);
-                }
-            }
-            public void onException(Exception ex) {
-                if (ex instanceof StopProcessing) {
-                    throw (StopProcessing) ex;
-                } else if (ex instanceof SimException) {
-                    DxConsole.err.println("\nEXCEPTION FROM SIMULATION:");
-                    DxConsole.err.println(ex.getMessage() + "\n");
-                    DxConsole.err.println(((SimException) ex).getContext());
-                } else {
-                    DxConsole.err.println("\nUNEXPECTED TOP-LEVEL EXCEPTION:");
-                    ex.printStackTrace(DxConsole.err);
-                }
-                errors++;
-            }
-            public void onProcessArchiveStart(File file) {
-                if (args.verbose) {
-                    DxConsole.out.println("processing archive " + file +
-                            "...");
-                }
-            }
-        });
+			new ClassPathOpener.Consumer() {
+				public boolean processFileBytes(String name, long lastModified, byte[] bytes) {
+					if (args.numThreads > 1) {
+						threadPool.execute(new ParallelProcessor(name, lastModified, bytes));
+						return false;
+					} else {
+						return Main.processFileBytes(name, lastModified, bytes);
+					}
+				}
+				public void onException(Exception ex) {
+					if (ex instanceof StopProcessing) {
+						throw (StopProcessing) ex;
+					} else if (ex instanceof SimException) {
+						DxConsole.err.println("\nEXCEPTION FROM SIMULATION:");
+						DxConsole.err.println(ex.getMessage() + "\n");
+						DxConsole.err.println(((SimException) ex).getContext());
+					} else {
+						DxConsole.err.println("\nUNEXPECTED TOP-LEVEL EXCEPTION:");
+						ex.printStackTrace(DxConsole.err);
+					}
+					errors++;
+				}
+				public void onProcessArchiveStart(File file) {
+					if (args.verbose) {
+						DxConsole.out.println("processing archive " + file +
+											  "...");
+					}
+				}
+			});
 
         return opener.process();
     }
@@ -534,7 +535,7 @@ public class Main {
          */
 
         DxConsole.err.println("\ntrouble processing \"" + name + "\":\n\n" +
-                IN_RE_CORE_CLASSES);
+							  IN_RE_CORE_CLASSES);
         errors++;
         throw new StopProcessing();
     }
@@ -589,7 +590,7 @@ public class Main {
                 ex.printStackTrace(DxConsole.err);
             } else {
                 DxConsole.err.println("\ntrouble writing output: " +
-                                   ex.getMessage());
+									  ex.getMessage());
             }
             return null;
         }
@@ -623,14 +624,14 @@ public class Main {
 
             try {
                 for (Map.Entry<String, byte[]> e :
-                         outputResources.entrySet()) {
+				outputResources.entrySet()) {
                     String name = e.getKey();
                     byte[] contents = e.getValue();
                     JarEntry entry = new JarEntry(name);
 
                     if (args.verbose) {
                         DxConsole.out.println("writing " + name + "; size " +
-                                           contents.length + "...");
+											  contents.length + "...");
                     }
 
                     entry.setSize(contents.length);
@@ -649,7 +650,7 @@ public class Main {
                 ex.printStackTrace(DxConsole.err);
             } else {
                 DxConsole.err.println("\ntrouble writing output: " +
-                                   ex.getMessage());
+									  ex.getMessage());
             }
             return false;
         }
@@ -701,7 +702,7 @@ public class Main {
      */
     private static OutputStream openOutput(String name) throws IOException {
         if (name.equals("-") ||
-                name.startsWith("-.")) {
+			name.startsWith("-.")) {
             return System.out;
         }
 
@@ -774,13 +775,13 @@ public class Main {
      * @param out {@code non-null;} where to dump to
      */
     private static void dumpMethod(DexFile dex, String fqName,
-            OutputStreamWriter out) {
+								   OutputStreamWriter out) {
         boolean wildcard = fqName.endsWith("*");
         int lastDot = fqName.lastIndexOf('.');
 
         if ((lastDot <= 0) || (lastDot == (fqName.length() - 1))) {
             DxConsole.err.println("bogus fully-qualified method name: " +
-                               fqName);
+								  fqName);
             return;
         }
 
@@ -1028,7 +1029,7 @@ public class Main {
              */
             public boolean isArg(String prefix) {
                 int n = prefix.length();
-                if (n > 0 && prefix.charAt(n-1) == '=') {
+                if (n > 0 && prefix.charAt(n - 1) == '=') {
                     // Argument accepts a value. Capture it.
                     if (current.startsWith(prefix)) {
                         // Argument is in the form --name=value, split the value out
@@ -1036,7 +1037,7 @@ public class Main {
                         return true;
                     } else {
                         // Check whether we have "--name value" as 2 arguments
-                        prefix = prefix.substring(0, n-1);
+                        prefix = prefix.substring(0, n - 1);
                         if (current.equals(prefix)) {
                             if (getNextValue()) {
                                 lastValue = current;
@@ -1063,7 +1064,7 @@ public class Main {
         public void parse(String[] args) {
             ArgumentsParser parser = new ArgumentsParser(args);
 
-            while(parser.getNext()) {
+            while (parser.getNext()) {
                 if (parser.isArg("--debug")) {
                     debug = true;
                 } else if (parser.isArg("--verbose")) {
@@ -1083,7 +1084,7 @@ public class Main {
                 } else if (parser.isArg("--optimize-list=")) {
                     if (dontOptimizeListFile != null) {
                         System.err.println("--optimize-list and "
-                                + "--no-optimize-list are incompatible.");
+										   + "--no-optimize-list are incompatible.");
                         throw new UsageException();
                     }
                     optimize = true;
@@ -1091,7 +1092,7 @@ public class Main {
                 } else if (parser.isArg("--no-optimize-list=")) {
                     if (dontOptimizeListFile != null) {
                         System.err.println("--optimize-list and "
-                                + "--no-optimize-list are incompatible.");
+										   + "--no-optimize-list are incompatible.");
                         throw new UsageException();
                     }
                     optimize = true;

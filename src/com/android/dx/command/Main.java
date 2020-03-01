@@ -24,44 +24,44 @@ import com.android.dx.Version;
  */
 public class Main {
     private static String USAGE_MESSAGE =
-        "usage:\n" +
-        "  dx --dex [--debug] [--verbose] [--positions=<style>] " +
-        "[--no-locals]\n" +
-        "  [--no-optimize] [--statistics] [--[no-]optimize-list=<file>] " +
-        "[--no-strict]\n" +
-        "  [--keep-classes] [--output=<file>] [--dump-to=<file>] " +
-        "[--dump-width=<n>]\n" +
-        "  [--dump-method=<name>[*]] [--verbose-dump] [--no-files] " +
-        "[--core-library]\n" +
-        "  [--num-threads=<n>]\n" +
-        "  [<file>.class | <file>.{zip,jar,apk} | <directory>] ...\n" +
-        "    Convert a set of classfiles into a dex file, optionally " +
-        "embedded in a\n" +
-        "    jar/zip. Output name must end with one of: .dex .jar " +
-        ".zip .apk. Positions\n" +
-        "    options: none, important, lines.\n" +
-        "  dx --annotool --annotation=<class> [--element=<element types>]\n" +
-        "  [--print=<print types>]\n" +
-        "  dx --dump [--debug] [--strict] [--bytes] [--optimize]\n" +
-        "  [--basic-blocks | --rop-blocks | --ssa-blocks | --dot] " +
-        "[--ssa-step=<step>]\n" +
-        "  [--width=<n>] [<file>.class | <file>.txt] ...\n" +
-        "    Dump classfiles, or transformations thereof, in a " +
-        "human-oriented format.\n" +
-        "  dx --find-usages <file.dex> <declaring type> <member>\n" +
-        "    Find references and declarations to a field or method.\n" +
-        "    declaring type: a class name in internal form, like " +
-        "Ljava/lang/Object;\n" +
-        "    member: a field or method name, like hashCode\n" +
-        "  dx -J<option> ... <arguments, in one of the above " +
-        "forms>\n" +
-        "    Pass VM-specific options to the virtual machine that " +
-        "runs dx.\n" +
-        "  dx --version\n" +
-        "    Print the version of this tool (" + Version.VERSION +
-        ").\n" +
-        "  dx --help\n" +
-        "    Print this message.";
+	"usage:\n" +
+	"  dx --dex [--debug] [--verbose] [--positions=<style>] " +
+	"[--no-locals]\n" +
+	"  [--no-optimize] [--statistics] [--[no-]optimize-list=<file>] " +
+	"[--no-strict]\n" +
+	"  [--keep-classes] [--output=<file>] [--dump-to=<file>] " +
+	"[--dump-width=<n>]\n" +
+	"  [--dump-method=<name>[*]] [--verbose-dump] [--no-files] " +
+	"[--core-library]\n" +
+	"  [--num-threads=<n>]\n" +
+	"  [<file>.class | <file>.{zip,jar,apk} | <directory>] ...\n" +
+	"    Convert a set of classfiles into a dex file, optionally " +
+	"embedded in a\n" +
+	"    jar/zip. Output name must end with one of: .dex .jar " +
+	".zip .apk. Positions\n" +
+	"    options: none, important, lines.\n" +
+	"  dx --annotool --annotation=<class> [--element=<element types>]\n" +
+	"  [--print=<print types>]\n" +
+	"  dx --dump [--debug] [--strict] [--bytes] [--optimize]\n" +
+	"  [--basic-blocks | --rop-blocks | --ssa-blocks | --dot] " +
+	"[--ssa-step=<step>]\n" +
+	"  [--width=<n>] [<file>.class | <file>.txt] ...\n" +
+	"    Dump classfiles, or transformations thereof, in a " +
+	"human-oriented format.\n" +
+	"  dx --find-usages <file.dex> <declaring type> <member>\n" +
+	"    Find references and declarations to a field or method.\n" +
+	"    declaring type: a class name in internal form, like " +
+	"Ljava/lang/Object;\n" +
+	"    member: a field or method name, like hashCode\n" +
+	"  dx -J<option> ... <arguments, in one of the above " +
+	"forms>\n" +
+	"    Pass VM-specific options to the virtual machine that " +
+	"runs dx.\n" +
+	"  dx --version\n" +
+	"    Print the version of this tool (" + Version.VERSION +
+	").\n" +
+	"  dx --help\n" +
+	"    Print this message.";
 
     /**
      * This class is uninstantiable.
@@ -73,7 +73,7 @@ public class Main {
     /**
      * Run!
      */
-    public static void main(String[] args) {
+    public static short main(String[] args) {
         boolean gotCmd = false;
         boolean showUsage = false;
 
@@ -88,21 +88,17 @@ public class Main {
 
                 gotCmd = true;
                 if (arg.equals("--dex")) {
-                    com.android.dx.command.dexer.Main.main(without(args, i));
-                    break;
+                    return com.android.dx.command.dexer.Main.main(without(args, i));
                 } else if (arg.equals("--dump")) {
-                    com.android.dx.command.dump.Main.main(without(args, i));
-                    break;
+                    return com.android.dx.command.dump.Main.main(without(args, i));
                 } else if (arg.equals("--annotool")) {
-                    com.android.dx.command.annotool.Main.main(
-                            without(args, i));
-                    break;
+                    return com.android.dx.command.annotool.Main.main(
+						without(args, i));
                 } else if (arg.equals("--find-usages")) {
-                    com.android.dx.command.findusages.Main.main(without(args, i));
-                    break;
+                    return com.android.dx.command.findusages.Main.main(without(args, i));
                 } else if (arg.equals("--version")) {
                     version();
-                    break;
+                    return 0;
                 } else if (arg.equals("--help")) {
                     showUsage = true;
                     break;
@@ -115,19 +111,19 @@ public class Main {
         } catch (RuntimeException ex) {
             System.err.println("\nUNEXPECTED TOP-LEVEL EXCEPTION:");
             ex.printStackTrace();
-            System.exit(2);
+            return 2;
         } catch (Throwable ex) {
             System.err.println("\nUNEXPECTED TOP-LEVEL ERROR:");
             ex.printStackTrace();
             if ((ex instanceof NoClassDefFoundError)
-                    || (ex instanceof NoSuchMethodError)) {
+				|| (ex instanceof NoSuchMethodError)) {
                 System.err.println(
-                        "Note: You may be using an incompatible " +
-                        "virtual machine or class library.\n" +
-                        "(This program is known to be incompatible " +
-                        "with recent releases of GCJ.)");
+					"Note: You may be using an incompatible " +
+					"virtual machine or class library.\n" +
+					"(This program is known to be incompatible " +
+					"with recent releases of GCJ.)");
             }
-            System.exit(3);
+            return 3;
         }
 
         if (!gotCmd) {
@@ -137,8 +133,9 @@ public class Main {
 
         if (showUsage) {
             usage();
-            System.exit(1);
+            return 1;
         }
+		return 0;
     }
 
     /**
@@ -146,7 +143,6 @@ public class Main {
      */
     private static void version() {
         System.err.println("dx version " + Version.VERSION);
-        System.exit(0);
     }
 
     /**

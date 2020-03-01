@@ -16,21 +16,10 @@
 
 package com.android.dx.command.annotool;
 
-import com.android.dx.cf.direct.ClassPathOpener;
-import com.android.dx.cf.direct.DirectClassFile;
-import com.android.dx.cf.direct.StdAttributeFactory;
-import com.android.dx.cf.iface.AttributeList;
-import com.android.dx.cf.iface.Attribute;
-import com.android.dx.cf.attrib.AttRuntimeInvisibleAnnotations;
-import com.android.dx.cf.attrib.BaseAnnotations;
-import com.android.dx.cf.attrib.AttRuntimeVisibleAnnotations;
-import com.android.dx.util.ByteArray;
-import com.android.dx.rop.annotation.Annotation;
+import com.android.dx.command.DxConsole;
 
-import java.io.File;
 import java.lang.annotation.ElementType;
 import java.util.EnumSet;
-import java.util.Arrays;
 
 
 public class Main {
@@ -143,18 +132,20 @@ public class Main {
         // This space intentionally left blank.
     }
 
-    public static void main(String[] argArray) {
+    public static short main(String[] argArray) {
 
         final Arguments args = new Arguments();
 
         try {
             args.parse(argArray);
         } catch (InvalidArgumentException ex) {
-            System.err.println(ex.getMessage());
+            DxConsole.err.println(ex.getMessage());
 
-            throw new RuntimeException("usage");
+            DxConsole.err.println("usage");
+			return 2;
         }
 
         new AnnotationLister(args).process();
+		return 0;
     }
 }

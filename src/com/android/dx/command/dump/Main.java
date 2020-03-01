@@ -17,6 +17,7 @@
 package com.android.dx.command.dump;
 
 import com.android.dx.cf.iface.ParseException;
+import com.android.dx.command.DxConsole;
 import com.android.dx.util.FileUtils;
 import com.android.dx.util.HexParser;
 
@@ -39,7 +40,7 @@ public class Main {
     /**
      * Run!
      */
-    public static void main(String[] args) {
+    public static short main(String[] args) {
         int at = 0;
 
         for (/*at*/; at < args.length; at++) {
@@ -71,40 +72,47 @@ public class Main {
                 arg = arg.substring(arg.indexOf('=') + 1);
                 parsedArgs.method = arg;
             } else {
-                System.err.println("unknown option: " + arg);
-                throw new RuntimeException("usage");
+                DxConsole.err.println("unknown option: " + arg);
+                DxConsole.err.println("usage");
+				return 2;
             }
         }
 
         if (at == args.length) {
-            System.err.println("no input files specified");
-            throw new RuntimeException("usage");
+            DxConsole.err.println("no input files specified");
+            DxConsole.err.println("usage");
+			return 2;
         }
 
         for (/*at*/; at < args.length; at++) {
             try {
                 String name = args[at];
-                System.out.println("reading " + name + "...");
+                DxConsole.out.println("reading " + name + "...");
                 byte[] bytes = FileUtils.readFile(name);
                 if (!name.endsWith(".class")) {
                     String src;
                     try {
                         src = new String(bytes, "utf-8");
                     } catch (UnsupportedEncodingException ex) {
-                        throw new RuntimeException("shouldn't happen", ex);
+						DxConsole.err.println("shouldn't happen");
+                        ex.printStackTrace(DxConsole.err);
+						return 2;
                     }
                     bytes = HexParser.parse(src);
                 }
                 processOne(name, bytes);
             } catch (ParseException ex) {
-                System.err.println("\ntrouble parsing:");
+                DxConsole.err.println("\ntrouble parsing:");
                 if (parsedArgs.debug) {
-                    ex.printStackTrace();
+                    ex.printStackTrace(DxConsole.err);
                 } else {
-                    ex.printContext(System.err);
+                    ex.printContext(DxConsole.err);
                 }
+				return 2;
             }
         }
+		
+		return 0;
     }
 
     /**
@@ -117,15 +125,15 @@ public class Main {
         if (parsedArgs.dotDump) {
             DotDumper.dump(bytes, name, parsedArgs);
         } else if (parsedArgs.basicBlocks) {
-            BlockDumper.dump(bytes, System.out, name, false, parsedArgs);
+            BlockDumper.dump(bytes, DxConsole.out, name, false, parsedArgs);
         } else if (parsedArgs.ropBlocks) {
-            BlockDumper.dump(bytes, System.out, name, true, parsedArgs);
+            BlockDumper.dump(bytes, DxConsole.out, name, true, parsedArgs);
         } else if (parsedArgs.ssaBlocks) {
             // --optimize ignored with --ssa-blocks
             parsedArgs.optimize = false;
-            SsaDumper.dump(bytes, System.out, name, parsedArgs);
+            SsaDumper.dump(bytes, DxConsole.out, name, parsedArgs);
         } else {
-            ClassDumper.dump(bytes, System.out, name, parsedArgs);
+            ClassDumper.dump(bytes, DxConsole.out, name, parsedArgs);
         }
     }
 }
