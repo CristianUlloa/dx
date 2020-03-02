@@ -23,12 +23,13 @@ import com.android.dx.cf.direct.StdAttributeFactory;
 import com.android.dx.cf.iface.Member;
 import com.android.dx.cf.iface.Method;
 import com.android.dx.cf.iface.ParseObserver;
+import com.android.dx.command.DxConsole;
+import com.android.dx.rop.code.AccessFlags;
 import com.android.dx.rop.code.BasicBlock;
 import com.android.dx.rop.code.BasicBlockList;
-import com.android.dx.rop.code.RopMethod;
 import com.android.dx.rop.code.DexTranslationAdvice;
+import com.android.dx.rop.code.RopMethod;
 import com.android.dx.rop.code.TranslationAdvice;
-import com.android.dx.rop.code.AccessFlags;
 import com.android.dx.ssa.Optimizer;
 import com.android.dx.util.ByteArray;
 import com.android.dx.util.Hex;
@@ -124,9 +125,9 @@ public class DotDumper implements ParseObserver {
                     true, advice);
         }
 
-        System.out.println("digraph "  + name + "{");
+        DxConsole.out.println("digraph "  + name + "{");
 
-        System.out.println("\tfirst -> n"
+        DxConsole.out.println("\tfirst -> n"
                 + Hex.u2(rmeth.getFirstLabel()) + ";");
 
         BasicBlockList blocks = rmeth.getBlocks();
@@ -138,23 +139,23 @@ public class DotDumper implements ParseObserver {
             IntList successors = bb.getSuccessors();
 
             if (successors.size() == 0) {
-                System.out.println("\tn" + Hex.u2(label) + " -> returns;");
+                DxConsole.out.println("\tn" + Hex.u2(label) + " -> returns;");
             } else if (successors.size() == 1) {
-                System.out.println("\tn" + Hex.u2(label) + " -> n"
+                DxConsole.out.println("\tn" + Hex.u2(label) + " -> n"
                         + Hex.u2(successors.get(0)) + ";");
             } else {
-                System.out.print("\tn" + Hex.u2(label) + " -> {");
+                DxConsole.out.print("\tn" + Hex.u2(label) + " -> {");
                 for (int j = 0; j < successors.size(); j++ ) {
                     int successor = successors.get(j);
 
                     if (successor != bb.getPrimarySuccessor()) {
-                        System.out.print(" n" + Hex.u2(successor) + " ");
+                        DxConsole.out.print(" n" + Hex.u2(successor) + " ");
                     }
 
                 }
-                System.out.println("};");
+                DxConsole.out.println("};");
 
-                System.out.println("\tn" + Hex.u2(label) + " -> n"
+                DxConsole.out.println("\tn" + Hex.u2(label) + " -> n"
                         + Hex.u2(bb.getPrimarySuccessor())
                         + " [label=\"primary\"];");
 
@@ -162,6 +163,6 @@ public class DotDumper implements ParseObserver {
             }
         }
 
-        System.out.println("}");
+        DxConsole.out.println("}");
     }
 }

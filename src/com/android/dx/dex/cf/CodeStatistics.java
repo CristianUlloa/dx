@@ -16,6 +16,7 @@
 
 package com.android.dx.dex.cf;
 
+import com.android.dx.command.DxConsole;
 import com.android.dx.dex.code.DalvCode;
 import com.android.dx.rop.code.RopMethod;
 
@@ -91,7 +92,7 @@ public final class CodeStatistics {
     public static void updateDexStatistics(DalvCode nonOptCode,
             DalvCode code) {
         if (DEBUG) {
-            System.err.println("dex insns (old/new) "
+            DxConsole.err.println("dex insns (old/new) "
                     + nonOptCode.getInsns().codeSize()
                     + "/" + code.getInsns().codeSize()
                     + " regs (o/n) "
@@ -124,7 +125,7 @@ public final class CodeStatistics {
         int oldCountRegs = nonOptRmeth.getBlocks().getRegCount();
 
         if (DEBUG) {
-            System.err.println("insns (old/new): "
+            DxConsole.err.println("insns (old/new): "
                     + oldCountInsns + "/"
                     + rmeth.getBlocks().getEffectiveInstructionCount()
                     + " regs (o/n):" + oldCountRegs

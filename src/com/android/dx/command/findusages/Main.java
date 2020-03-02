@@ -31,7 +31,7 @@ public final class Main {
 			String memberName = args[2];
 
 			DexBuffer dex = new DexBuffer(new File(dexFile));
-			PrintWriter out = new PrintWriter(System.out);
+			PrintWriter out = new PrintWriter(DxConsole.out);
 			new FindUsages(dex, declaredBy, memberName, out).findUsages();
 			out.flush();
 		}catch(RuntimeException e) {

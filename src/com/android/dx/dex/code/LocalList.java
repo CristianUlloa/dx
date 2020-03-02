@@ -16,10 +16,11 @@
 
 package com.android.dx.dex.code;
 
+import com.android.dx.command.DxConsole;
 import com.android.dx.rop.code.RegisterSpec;
 import com.android.dx.rop.code.RegisterSpecSet;
-import com.android.dx.rop.cst.CstType;
 import com.android.dx.rop.cst.CstString;
+import com.android.dx.rop.cst.CstType;
 import com.android.dx.rop.type.Type;
 import com.android.dx.util.FixedSizeList;
 
@@ -380,7 +381,7 @@ public final class LocalList extends FixedSizeList {
         } catch (RuntimeException ex) {
             int sz = locals.size();
             for (int i = 0; i < sz; i++) {
-                System.err.println(locals.get(i));
+                DxConsole.err.println(locals.get(i));
             }
             throw ex;
         }
@@ -535,7 +536,7 @@ public final class LocalList extends FixedSizeList {
          */
         public void snapshot(int address, RegisterSpecSet specs) {
             if (DEBUG) {
-                System.err.printf("%04x snapshot %s\n", address, specs);
+                DxConsole.err.printf("%04x snapshot %s\n", address, specs);
             }
 
             int sz = specs.getMaxSize();
@@ -558,7 +559,7 @@ public final class LocalList extends FixedSizeList {
             }
 
             if (DEBUG) {
-                System.err.printf("%04x snapshot done\n", address);
+                DxConsole.err.printf("%04x snapshot done\n", address);
             }
         }
 
@@ -571,7 +572,7 @@ public final class LocalList extends FixedSizeList {
          */
         public void startLocal(int address, RegisterSpec startedLocal) {
             if (DEBUG) {
-                System.err.printf("%04x start %s\n", address, startedLocal);
+                DxConsole.err.printf("%04x start %s\n", address, startedLocal);
             }
 
             int regNum = startedLocal.getReg();
@@ -707,7 +708,7 @@ public final class LocalList extends FixedSizeList {
         public void endLocal(int address, RegisterSpec endedLocal,
                 Disposition disposition) {
             if (DEBUG) {
-                System.err.printf("%04x end %s\n", address, endedLocal);
+                DxConsole.err.printf("%04x end %s\n", address, endedLocal);
             }
 
             int regNum = endedLocal.getReg();

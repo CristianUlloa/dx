@@ -109,15 +109,15 @@ public class Main {
         } catch (UsageException ex) {
             showUsage = true;
         } catch (RuntimeException ex) {
-            System.err.println("\nUNEXPECTED TOP-LEVEL EXCEPTION:");
+            DxConsole.err.println("\nUNEXPECTED TOP-LEVEL EXCEPTION:");
             ex.printStackTrace();
             return 2;
         } catch (Throwable ex) {
-            System.err.println("\nUNEXPECTED TOP-LEVEL ERROR:");
+            DxConsole.err.println("\nUNEXPECTED TOP-LEVEL ERROR:");
             ex.printStackTrace();
             if ((ex instanceof NoClassDefFoundError)
 				|| (ex instanceof NoSuchMethodError)) {
-                System.err.println(
+                DxConsole.err.println(
 					"Note: You may be using an incompatible " +
 					"virtual machine or class library.\n" +
 					"(This program is known to be incompatible " +
@@ -127,7 +127,7 @@ public class Main {
         }
 
         if (!gotCmd) {
-            System.err.println("error: no command specified");
+            DxConsole.err.println("error: no command specified");
             showUsage = true;
         }
 
@@ -142,14 +142,14 @@ public class Main {
      * Prints the version message.
      */
     private static void version() {
-        System.err.println("dx version " + Version.VERSION);
+        DxConsole.err.println("dx version " + Version.VERSION);
     }
 
     /**
      * Prints the usage message.
      */
     private static void usage() {
-        System.err.println(USAGE_MESSAGE);
+        DxConsole.err.println(USAGE_MESSAGE);
     }
 
     /**

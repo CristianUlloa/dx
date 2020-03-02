@@ -16,6 +16,7 @@
 
 package com.android.dx.dex.file;
 
+import com.android.dx.command.DxConsole;
 import com.android.dx.dex.code.DalvCode;
 import com.android.dx.dex.code.DalvInsnList;
 import com.android.dx.dex.code.LocalList;
@@ -147,7 +148,7 @@ public class DebugInfoItem extends OffsettedItem {
                         isStatic);
             } catch (RuntimeException ex) {
                 // Reconvert, annotating to System.err.
-                encode0(file, "", new PrintWriter(System.err, true), null,
+  encode0(file, "", new PrintWriter(DxConsole.err, true), null,
                         false);
                 throw ex;
             }

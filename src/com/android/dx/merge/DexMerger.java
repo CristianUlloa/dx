@@ -16,6 +16,7 @@
 
 package com.android.dx.merge;
 
+import com.android.dx.command.DxConsole;
 import com.android.dx.dex.SizeOf;
 import com.android.dx.dex.TableOfContents;
 import com.android.dx.io.Annotation;
@@ -28,14 +29,13 @@ import com.android.dx.io.FieldId;
 import com.android.dx.io.MethodId;
 import com.android.dx.io.ProtoId;
 import com.android.dx.util.DexException;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Combine two dex files into one.
@@ -198,14 +198,14 @@ public final class DexMerger {
             DexMerger compacter = new DexMerger(
                     dexOut, new DexBuffer(), CollisionPolicy.FAIL, compactedSizes);
             result = compacter.mergeDexBuffers();
-            System.out.printf("Result compacted from %.1fKiB to %.1fKiB to save %.1fKiB%n",
+            DxConsole.out.printf("Result compacted from %.1fKiB to %.1fKiB to save %.1fKiB%n",
                     dexOut.getLength() / 1024f,
                     result.getLength() / 1024f,
                     wastedByteCount / 1024f);
         }
 
         long elapsed = System.nanoTime() - start;
-        System.out.printf("Merged dex A (%d defs/%.1fKiB) with dex B "
+        DxConsole.out.printf("Merged dex A (%d defs/%.1fKiB) with dex B "
                 + "(%d defs/%.1fKiB). Result is %d defs/%.1fKiB. Took %.1fs%n",
                 dexA.getTableOfContents().classDefs.size,
                 dexA.getLength() / 1024f,
@@ -955,8 +955,8 @@ public final class DexMerger {
     }
 
     private static void printUsage() {
-        System.out.println("Usage: DexMerger <out.dex> <a.dex> <b.dex>");
-        System.out.println();
-        System.out.println("If both a and b define the same classes, a's copy will be used.");
+        DxConsole.out.println("Usage: DexMerger <out.dex> <a.dex> <b.dex>");
+        DxConsole.out.println();
+        DxConsole.out.println("If both a and b define the same classes, a's copy will be used.");
     }
 }

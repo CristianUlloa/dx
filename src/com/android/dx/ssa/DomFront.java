@@ -16,12 +16,10 @@
 
 package com.android.dx.ssa;
 
+import com.android.dx.command.DxConsole;
 import com.android.dx.util.IntSet;
-import com.android.dx.util.BitIntSet;
-import com.android.dx.util.ListIntSet;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.BitSet;
 
 /**
@@ -82,7 +80,7 @@ public class DomFront {
         if (DEBUG) {
             for (int i = 0; i < szNodes; i++) {
                 SsaBasicBlock node = nodes.get(i);
-                System.out.println("pred[" + i + "]: "
+                DxConsole.out.println("pred[" + i + "]: "
                         + node.getPredecessors());
             }
         }
@@ -92,7 +90,7 @@ public class DomFront {
         if (DEBUG) {
             for (int i = 0; i < szNodes; i++) {
                 DomInfo info = domInfos[i];
-                System.out.println("idom[" + i + "]: "
+                DxConsole.out.println("idom[" + i + "]: "
                         + info.idom);
             }
         }
@@ -112,7 +110,7 @@ public class DomFront {
 
         if (DEBUG) {
             for (int i = 0; i < szNodes; i++) {
-                System.out.println("df[" + i + "]: "
+                DxConsole.out.println("df[" + i + "]: "
                         + domInfos[i].dominanceFrontiers);
             }
         }
@@ -138,7 +136,7 @@ public class DomFront {
             }
             sb.append('}');
 
-            System.out.println("domChildren[" + node + "]: "
+            DxConsole.out.println("domChildren[" + node + "]: "
                     + sb);
         }
     }

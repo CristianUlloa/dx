@@ -24,6 +24,7 @@ import com.android.dx.cf.iface.Field;
 import com.android.dx.cf.iface.FieldList;
 import com.android.dx.cf.iface.Method;
 import com.android.dx.cf.iface.MethodList;
+import com.android.dx.command.DxConsole;
 import com.android.dx.dex.DexOptions;
 import com.android.dx.dex.code.DalvCode;
 import com.android.dx.dex.code.PositionList;
@@ -34,10 +35,10 @@ import com.android.dx.dex.file.EncodedMethod;
 import com.android.dx.rop.annotation.Annotations;
 import com.android.dx.rop.annotation.AnnotationsList;
 import com.android.dx.rop.code.AccessFlags;
+import com.android.dx.rop.code.DexTranslationAdvice;
 import com.android.dx.rop.code.LocalVariableExtractor;
 import com.android.dx.rop.code.LocalVariableInfo;
 import com.android.dx.rop.code.RopMethod;
-import com.android.dx.rop.code.DexTranslationAdvice;
 import com.android.dx.rop.code.TranslationAdvice;
 import com.android.dx.rop.cst.Constant;
 import com.android.dx.rop.cst.CstBoolean;
@@ -82,7 +83,7 @@ public class CfTranslator {
      * @return {@code non-null;} the translated class
      */
     public static ClassDefItem translate(String filePath, byte[] bytes,
-            CfOptions cfOptions, DexOptions dexOptions) {
+										 CfOptions cfOptions, DexOptions dexOptions) {
         try {
             return translate0(filePath, bytes, cfOptions, dexOptions);
         } catch (RuntimeException ex) {
@@ -104,7 +105,7 @@ public class CfTranslator {
      * @return {@code non-null;} the translated class
      */
     private static ClassDefItem translate0(String filePath, byte[] bytes,
-            CfOptions cfOptions, DexOptions dexOptions) {
+										   CfOptions cfOptions, DexOptions dexOptions) {
         DirectClassFile cf =
             new DirectClassFile(bytes, filePath, cfOptions.strictNameCheck);
 
@@ -112,7 +113,7 @@ public class CfTranslator {
         cf.getMagic();
 
         OptimizerOptions.loadOptimizeLists(cfOptions.optimizeListFile,
-                cfOptions.dontOptimizeListFile);
+										   cfOptions.dontOptimizeListFile);
 
         // Build up a class to output.
 
@@ -122,7 +123,7 @@ public class CfTranslator {
             cf.getSourceFile();
         ClassDefItem out =
             new ClassDefItem(thisClass, classAccessFlags,
-                    cf.getSuperclass(), cf.getInterfaces(), sourceFile);
+							 cf.getSuperclass(), cf.getInterfaces(), sourceFile);
 
         Annotations classAnnotations =
             AttributeTranslator.getClassAnnotations(cf, cfOptions);
@@ -186,7 +187,7 @@ public class CfTranslator {
      * @param type {@code non-null;} the desired type
      */
     private static TypedConstant coerceConstant(TypedConstant constant,
-            Type type) {
+												Type type) {
         Type constantType = constant.getType();
 
         if (constantType.equals(type)) {
@@ -195,21 +196,21 @@ public class CfTranslator {
 
         switch (type.getBasicType()) {
             case Type.BT_BOOLEAN: {
-                return CstBoolean.make(((CstInteger) constant).getValue());
-            }
+					return CstBoolean.make(((CstInteger) constant).getValue());
+				}
             case Type.BT_BYTE: {
-                return CstByte.make(((CstInteger) constant).getValue());
-            }
+					return CstByte.make(((CstInteger) constant).getValue());
+				}
             case Type.BT_CHAR: {
-                return CstChar.make(((CstInteger) constant).getValue());
-            }
+					return CstChar.make(((CstInteger) constant).getValue());
+				}
             case Type.BT_SHORT: {
-                return CstShort.make(((CstInteger) constant).getValue());
-            }
+					return CstShort.make(((CstInteger) constant).getValue());
+				}
             default: {
-                throw new UnsupportedOperationException("can't coerce " +
-                        constant + " to " + type);
-            }
+					throw new UnsupportedOperationException("can't coerce " +
+															constant + " to " + type);
+				}
         }
     }
 
@@ -222,7 +223,7 @@ public class CfTranslator {
      * @param out {@code non-null;} output class
      */
     private static void processMethods(DirectClassFile cf, CfOptions cfOptions,
-            DexOptions dexOptions, ClassDefItem out) {
+									   DexOptions dexOptions, ClassDefItem out) {
         CstType thisClass = cf.getThisClass();
         MethodList methods = cf.getMethods();
         int sz = methods.size();
@@ -246,8 +247,8 @@ public class CfTranslator {
                 } else {
                     ConcreteMethod concrete =
                         new ConcreteMethod(one, cf,
-                                (cfOptions.positionInfo != PositionList.NONE),
-                                cfOptions.localInfo);
+										   (cfOptions.positionInfo != PositionList.NONE),
+										   cfOptions.localInfo);
 
                     TranslationAdvice advice;
 
@@ -260,27 +261,27 @@ public class CfTranslator {
                     paramSize = meth.getParameterWordCount(isStatic);
 
                     String canonicalName
-                            = thisClass.getClassType().getDescriptor()
-                                + "." + one.getName().getString();
+						= thisClass.getClassType().getDescriptor()
+						+ "." + one.getName().getString();
 
                     if (cfOptions.optimize &&
-                            OptimizerOptions.shouldOptimize(canonicalName)) {
+						OptimizerOptions.shouldOptimize(canonicalName)) {
                         if (DEBUG) {
-                            System.err.println("Optimizing " + canonicalName);
+							DxConsole.err.println("Optimizing " + canonicalName);
                         }
 
                         nonOptRmeth = rmeth;
                         rmeth = Optimizer.optimize(rmeth,
-                                paramSize, isStatic, cfOptions.localInfo, advice);
+												   paramSize, isStatic, cfOptions.localInfo, advice);
 
                         if (DEBUG) {
                             OptimizerOptions.compareOptimizerStep(nonOptRmeth,
-                                    paramSize, isStatic, cfOptions, advice, rmeth);
+																  paramSize, isStatic, cfOptions, advice, rmeth);
                         }
 
                         if (cfOptions.statistics) {
                             CodeStatistics.updateRopStatistics(
-                                    nonOptRmeth, rmeth);
+								nonOptRmeth, rmeth);
                         }
                     }
 
@@ -291,11 +292,11 @@ public class CfTranslator {
                     }
 
                     code = RopTranslator.translate(rmeth, cfOptions.positionInfo,
-                            locals, paramSize, dexOptions);
+												   locals, paramSize, dexOptions);
 
                     if (cfOptions.statistics && nonOptRmeth != null) {
                         updateDexStatistics(cfOptions, dexOptions, rmeth, nonOptRmeth, locals,
-                                paramSize, concrete.getCode().size());
+											paramSize, concrete.getCode().size());
                     }
                 }
 
@@ -350,8 +351,8 @@ public class CfTranslator {
      * Helper that updates the dex statistics.
      */
     private static void updateDexStatistics(CfOptions cfOptions, DexOptions dexOptions,
-            RopMethod optRmeth, RopMethod nonOptRmeth,
-            LocalVariableInfo locals, int paramSize, int originalByteCount) {
+											RopMethod optRmeth, RopMethod nonOptRmeth,
+											LocalVariableInfo locals, int paramSize, int originalByteCount) {
         /*
          * Run rop->dex again on optimized vs. non-optimized method to
          * collect statistics. We have to totally convert both ways,
@@ -361,9 +362,9 @@ public class CfTranslator {
          */
 
         DalvCode optCode = RopTranslator.translate(optRmeth,
-                cfOptions.positionInfo, locals, paramSize, dexOptions);
+												   cfOptions.positionInfo, locals, paramSize, dexOptions);
         DalvCode nonOptCode = RopTranslator.translate(nonOptRmeth,
-                cfOptions.positionInfo, locals, paramSize, dexOptions);
+													  cfOptions.positionInfo, locals, paramSize, dexOptions);
 
         /*
          * Fake out the indices, so code.getInsns() can work well enough
@@ -372,11 +373,11 @@ public class CfTranslator {
 
         DalvCode.AssignIndicesCallback callback =
             new DalvCode.AssignIndicesCallback() {
-                public int getIndex(Constant cst) {
-                    // Everything is at index 0!
-                    return 0;
-                }
-            };
+			public int getIndex(Constant cst) {
+				// Everything is at index 0!
+				return 0;
+			}
+		};
 
         optCode.assignIndices(callback);
         nonOptCode.assignIndices(callback);

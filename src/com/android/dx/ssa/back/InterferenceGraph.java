@@ -16,18 +16,10 @@
 
 package com.android.dx.ssa.back;
 
-import com.android.dx.ssa.SsaMethod;
-import com.android.dx.ssa.SsaBasicBlock;
-import com.android.dx.ssa.SsaInsn;
-import com.android.dx.ssa.PhiInsn;
+import com.android.dx.command.DxConsole;
 import com.android.dx.ssa.SetFactory;
-import com.android.dx.rop.code.RegisterSpec;
 import com.android.dx.util.IntSet;
-import com.android.dx.util.BitIntSet;
-import com.android.dx.util.ListIntSet;
 
-import java.util.BitSet;
-import java.util.List;
 import java.util.ArrayList;
 
 /**
@@ -79,7 +71,7 @@ public class InterferenceGraph {
 
             sb.append("Reg " + i + ":" + interference.get(i).toString());
 
-            System.out.println(sb.toString());
+            DxConsole.out.println(sb.toString());
         }
     }
 

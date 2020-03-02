@@ -16,18 +16,24 @@
 
 package com.android.dx.ssa.back;
 
-import com.android.dx.rop.code.*;
+import com.android.dx.command.DxConsole;
+import com.android.dx.rop.code.CstInsn;
+import com.android.dx.rop.code.LocalItem;
+import com.android.dx.rop.code.RegOps;
+import com.android.dx.rop.code.RegisterSpec;
+import com.android.dx.rop.code.RegisterSpecList;
+import com.android.dx.rop.code.Rop;
 import com.android.dx.rop.cst.CstInteger;
 import com.android.dx.ssa.InterferenceRegisterMapper;
+import com.android.dx.ssa.NormalSsaInsn;
+import com.android.dx.ssa.Optimizer;
+import com.android.dx.ssa.PhiInsn;
 import com.android.dx.ssa.RegisterMapper;
+import com.android.dx.ssa.SsaBasicBlock;
 import com.android.dx.ssa.SsaInsn;
 import com.android.dx.ssa.SsaMethod;
-import com.android.dx.ssa.NormalSsaInsn;
-import com.android.dx.ssa.PhiInsn;
-import com.android.dx.ssa.Optimizer;
-import com.android.dx.ssa.SsaBasicBlock;
-import com.android.dx.util.IntSet;
 import com.android.dx.util.IntIterator;
+import com.android.dx.util.IntSet;
 
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -126,27 +132,27 @@ public class FirstFitLocalCombiningAllocator extends RegisterAllocator {
             printLocalVars();
         }
 
-        if (DEBUG) System.out.println("--->Mapping local-associated params");
+        if (DEBUG) DxConsole.out.println("--->Mapping local-associated params");
         handleLocalAssociatedParams();
 
-        if (DEBUG) System.out.println("--->Mapping other params");
+        if (DEBUG) DxConsole.out.println("--->Mapping other params");
         handleUnassociatedParameters();
 
-        if (DEBUG) System.out.println("--->Mapping invoke-range");
+        if (DEBUG) DxConsole.out.println("--->Mapping invoke-range");
         handleInvokeRangeInsns();
 
         if (DEBUG) {
-            System.out.println("--->Mapping local-associated non-params");
+            DxConsole.out.println("--->Mapping local-associated non-params");
         }
         handleLocalAssociatedOther();
 
-        if (DEBUG) System.out.println("--->Mapping check-cast results");
+        if (DEBUG) DxConsole.out.println("--->Mapping check-cast results");
         handleCheckCastResults();
 
-        if (DEBUG) System.out.println("--->Mapping phis");
+        if (DEBUG) DxConsole.out.println("--->Mapping phis");
         handlePhiInsns();
 
-        if (DEBUG) System.out.println("--->Mapping others");
+        if (DEBUG) DxConsole.out.println("--->Mapping others");
         handleNormalUnassociated();
 
         return mapper;
@@ -156,7 +162,7 @@ public class FirstFitLocalCombiningAllocator extends RegisterAllocator {
      * Dumps local variable table to stdout for debugging.
      */
     private void printLocalVars() {
-        System.out.println("Printing local vars");
+        DxConsole.out.println("Printing local vars");
         for (Map.Entry<LocalItem, ArrayList<RegisterSpec>> e :
                 localVariables.entrySet()) {
             StringBuilder regs = new StringBuilder();
@@ -169,7 +175,7 @@ public class FirstFitLocalCombiningAllocator extends RegisterAllocator {
                 regs.append(' ');
             }
             regs.append('}');
-            System.out.printf("Local: %s Registers: %s\n", e.getKey(), regs);
+            DxConsole.out.printf("Local: %s Registers: %s\n", e.getKey(), regs);
         }
     }
 
@@ -698,7 +704,7 @@ public class FirstFitLocalCombiningAllocator extends RegisterAllocator {
         }
 
         if (DEBUG) {
-            System.out.printf("Add mapping s%d -> v%d c:%d\n",
+            DxConsole.out.printf("Add mapping s%d -> v%d c:%d\n",
                     ssaSpec.getReg(), ropReg, ssaSpec.getCategory());
         }
 

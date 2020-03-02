@@ -16,9 +16,8 @@
 
 package com.android.dx.rop.code;
 
-import com.android.dx.rop.type.TypeBearer;
+import com.android.dx.command.DxConsole;
 import com.android.dx.util.MutabilityControl;
-
 import java.util.HashMap;
 
 /**
@@ -228,9 +227,9 @@ public final class LocalVariableInfo
             }
 
             if (blockStarts[label] == emptySet) {
-                System.out.printf("%04x: empty set\n", label);
+                DxConsole.out.printf("%04x: empty set\n", label);
             } else {
-                System.out.printf("%04x: %s\n", label, blockStarts[label]);
+                DxConsole.out.printf("%04x: %s\n", label, blockStarts[label]);
             }
         }
     }

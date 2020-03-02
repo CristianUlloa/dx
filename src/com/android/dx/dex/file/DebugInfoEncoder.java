@@ -16,26 +16,27 @@
 
 package com.android.dx.dex.file;
 
+import com.android.dx.command.DxConsole;
 import com.android.dx.dex.code.LocalList;
 import com.android.dx.dex.code.PositionList;
 import com.android.dx.rop.code.RegisterSpec;
 import com.android.dx.rop.code.SourcePosition;
 import com.android.dx.rop.cst.CstMethodRef;
-import com.android.dx.rop.cst.CstType;
 import com.android.dx.rop.cst.CstString;
+import com.android.dx.rop.cst.CstType;
 import com.android.dx.rop.type.Prototype;
 import com.android.dx.rop.type.StdTypeList;
 import com.android.dx.rop.type.Type;
-import com.android.dx.util.ByteArrayAnnotatedOutput;
 import com.android.dx.util.AnnotatedOutput;
+import com.android.dx.util.ByteArrayAnnotatedOutput;
 import com.android.dx.util.ExceptionWithContext;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.BitSet;
 
 import static com.android.dx.dex.file.DebugInfoConstants.*;
 
@@ -155,7 +156,7 @@ public final class DebugInfoEncoder {
 
             if (DEBUG) {
                 for (int i = 0 ; i < ret.length; i++) {
-                    System.err.printf("byte %02x\n", (0xff & ret[i]));
+                    DxConsole.err.printf("byte %02x\n", (0xff & ret[i]));
                 }
             }
 
@@ -623,7 +624,7 @@ public final class DebugInfoEncoder {
         }
 
         if (DEBUG) {
-            System.err.println("emit local restart");
+            DxConsole.err.println("emit local restart");
         }
     }
 
@@ -645,7 +646,7 @@ public final class DebugInfoEncoder {
         }
 
         if (DEBUG) {
-            System.err.printf("Emit string %s\n",
+            DxConsole.err.printf("Emit string %s\n",
                     string == null ? "<null>" : string.toQuoted());
         }
     }
@@ -666,7 +667,7 @@ public final class DebugInfoEncoder {
         }
 
         if (DEBUG) {
-            System.err.printf("Emit type %s\n",
+            DxConsole.err.printf("Emit type %s\n",
                     type == null ? "<null>" : type.toHuman());
         }
     }
@@ -702,7 +703,7 @@ public final class DebugInfoEncoder {
         }
 
         if (DEBUG) {
-            System.err.println("emit local start");
+            DxConsole.err.println("emit local start");
         }
     }
 
@@ -732,7 +733,7 @@ public final class DebugInfoEncoder {
         }
 
         if (DEBUG) {
-            System.err.println("emit local start");
+            DxConsole.err.println("emit local start");
         }
     }
 
@@ -757,7 +758,7 @@ public final class DebugInfoEncoder {
         }
 
         if (DEBUG) {
-            System.err.println("emit local end");
+            DxConsole.err.println("emit local end");
         }
     }
 
@@ -860,7 +861,7 @@ public final class DebugInfoEncoder {
         }
 
         if (DEBUG) {
-            System.err.printf("Emitting advance_line for %d\n", deltaLines);
+            DxConsole.err.printf("Emitting advance_line for %d\n", deltaLines);
         }
     }
 
@@ -884,7 +885,7 @@ public final class DebugInfoEncoder {
         }
 
         if (DEBUG) {
-            System.err.printf("Emitting advance_pc for %d\n", deltaAddress);
+            DxConsole.err.printf("Emitting advance_pc for %d\n", deltaAddress);
         }
     }
 

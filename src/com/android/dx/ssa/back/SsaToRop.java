@@ -16,6 +16,7 @@
 
 package com.android.dx.ssa.back;
 
+import com.android.dx.command.DxConsole;
 import com.android.dx.rop.code.BasicBlock;
 import com.android.dx.rop.code.BasicBlockList;
 import com.android.dx.rop.code.InsnList;
@@ -105,8 +106,8 @@ public class SsaToRop {
         RegisterMapper mapper = allocator.allocateRegisters();
 
         if (DEBUG) {
-            System.out.println("Printing reg map");
-            System.out.println(((BasicRegisterMapper)mapper).toHuman());
+            DxConsole.out.println("Printing reg map");
+            DxConsole.out.println(((BasicRegisterMapper)mapper).toHuman());
         }
 
         ssaMeth.setBackMode();
@@ -229,7 +230,7 @@ public class SsaToRop {
         }
 
         if (DEBUG) {
-            System.out.printf("Moving %d registers from 0 to %d\n",
+            DxConsole.out.printf("Moving %d registers from 0 to %d\n",
                     paramWidth, regCount - paramWidth);
         }
 

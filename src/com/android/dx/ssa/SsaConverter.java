@@ -16,6 +16,7 @@
 
 package com.android.dx.ssa;
 
+import com.android.dx.command.DxConsole;
 import com.android.dx.rop.code.RegisterSpec;
 import com.android.dx.rop.code.RopMethod;
 import com.android.dx.util.IntIterator;
@@ -325,13 +326,13 @@ public class SsaConverter {
         }
 
         if (DEBUG) {
-            System.out.println("defsites");
+            DxConsole.out.println("defsites");
 
             for (int i = 0; i < regCount; i++) {
                 StringBuilder sb = new StringBuilder();
                 sb.append('v').append(i).append(": ");
                 sb.append(defsites[i].toString());
-                System.out.println(sb);
+                DxConsole.out.println(sb);
             }
         }
 
@@ -378,13 +379,13 @@ public class SsaConverter {
         }
 
         if (DEBUG) {
-            System.out.println("phisites");
+            DxConsole.out.println("phisites");
 
             for (int i = 0; i < regCount; i++) {
                 StringBuilder sb = new StringBuilder();
                 sb.append('v').append(i).append(": ");
                 sb.append(phisites[i].toString());
-                System.out.println(sb);
+                DxConsole.out.println(sb);
             }
         }
     }

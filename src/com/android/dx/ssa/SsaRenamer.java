@@ -16,6 +16,7 @@
 
 package com.android.dx.ssa;
 
+import com.android.dx.command.DxConsole;
 import com.android.dx.rop.code.LocalItem;
 import com.android.dx.rop.code.PlainInsn;
 import com.android.dx.rop.code.RegisterSpec;
@@ -172,7 +173,7 @@ public class SsaRenamer implements Runnable {
         ssaMeth.onInsnsChanged();
 
         if (DEBUG) {
-            System.out.println("SSA\tRop");
+            DxConsole.out.println("SSA\tRop");
             /*
              * We're going to compute the version of the rop register
              * by keeping a running total of how many times the rop
@@ -183,7 +184,7 @@ public class SsaRenamer implements Runnable {
             int sz = ssaRegToRopReg.size();
             for (int i = 0; i < sz; i++) {
                 int ropReg = ssaRegToRopReg.get(i);
-                System.out.println(i + "\t" + ropReg + "["
+                DxConsole.out.println(i + "\t" + ropReg + "["
                         + versions[ropReg] + "]");
                 versions[ropReg]++;
             }

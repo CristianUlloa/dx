@@ -16,9 +16,10 @@
 
 package com.android.dx.ssa;
 
-import com.android.dx.util.MutabilityControl;
-import com.android.dx.rop.code.RegisterSpecSet;
+import com.android.dx.command.DxConsole;
 import com.android.dx.rop.code.RegisterSpec;
+import com.android.dx.rop.code.RegisterSpecSet;
+import com.android.dx.util.MutabilityControl;
 
 import java.util.HashMap;
 import java.util.List;
@@ -225,9 +226,9 @@ public class LocalVariableInfo         extends MutabilityControl {
             }
 
             if (blockStarts[index] == emptySet) {
-                System.out.printf("%04x: empty set\n", index);
+                DxConsole.out.printf("%04x: empty set\n", index);
             } else {
-                System.out.printf("%04x: %s\n", index, blockStarts[index]);
+                DxConsole.out.printf("%04x: %s\n", index, blockStarts[index]);
             }
         }
     }

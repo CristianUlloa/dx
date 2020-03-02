@@ -194,7 +194,7 @@ public class Main {
         File incrementalOutFile = null;
         if (args.incremental) {
             if (args.outName == null) {
-                System.err.println(
+                DxConsole.err.println(
 					"error: no incremental output name specified");
                 return -1;
             }
@@ -703,7 +703,7 @@ public class Main {
     private static OutputStream openOutput(String name) throws IOException {
         if (name.equals("-") ||
 			name.startsWith("-.")) {
-            return System.out;
+            return DxConsole.out;
         }
 
         return new FileOutputStream(name);
@@ -724,7 +724,7 @@ public class Main {
 
         stream.flush();
 
-        if (stream != System.out) {
+        if (stream != DxConsole.out) {
             stream.close();
         }
     }
@@ -1043,7 +1043,7 @@ public class Main {
                                 lastValue = current;
                                 return true;
                             } else {
-                                System.err.println("Missing value after parameter " + prefix);
+                                DxConsole.err.println("Missing value after parameter " + prefix);
                                 throw new UsageException();
                             }
                         }
@@ -1083,7 +1083,7 @@ public class Main {
                     statistics = true;
                 } else if (parser.isArg("--optimize-list=")) {
                     if (dontOptimizeListFile != null) {
-                        System.err.println("--optimize-list and "
+                        DxConsole.err.println("--optimize-list and "
 										   + "--no-optimize-list are incompatible.");
                         throw new UsageException();
                     }
@@ -1091,7 +1091,7 @@ public class Main {
                     optimizeListFile = parser.getLastValue();
                 } else if (parser.isArg("--no-optimize-list=")) {
                     if (dontOptimizeListFile != null) {
-                        System.err.println("--optimize-list and "
+                        DxConsole.err.println("--optimize-list and "
 										   + "--no-optimize-list are incompatible.");
                         throw new UsageException();
                     }
@@ -1107,7 +1107,7 @@ public class Main {
                                outName.equals("-")) {
                         jarOutput = false;
                     } else {
-                        System.err.println("unknown output extension: " +
+                        DxConsole.err.println("unknown output extension: " +
                                            outName);
                         throw new UsageException();
                     }
@@ -1127,7 +1127,7 @@ public class Main {
                     } else if (pstr == "lines") {
                         positionInfo = PositionList.LINES;
                     } else {
-                        System.err.println("unknown positions option: " +
+                        DxConsole.err.println("unknown positions option: " +
                                            pstr);
                         throw new UsageException();
                     }
@@ -1138,7 +1138,7 @@ public class Main {
                 } else if (parser.isArg("--incremental")) {
                     incremental = true;
                 } else {
-                    System.err.println("unknown option: " + parser.getCurrent());
+                    DxConsole.err.println("unknown option: " + parser.getCurrent());
                     throw new UsageException();
                 }
             }
@@ -1146,11 +1146,11 @@ public class Main {
             fileNames = parser.getRemaining();
             if (fileNames.length == 0) {
                 if (!emptyOk) {
-                    System.err.println("no input files specified");
+                    DxConsole.err.println("no input files specified");
                     throw new UsageException();
                 }
             } else if (emptyOk) {
-                System.out.println("ignoring input files");
+                DxConsole.out.println("ignoring input files");
             }
 
             if ((humanOutName == null) && (methodToDump != null)) {

@@ -16,6 +16,7 @@
 
 package com.android.dx.dex.cf;
 
+import com.android.dx.command.DxConsole;
 import com.android.dx.rop.code.RopMethod;
 import com.android.dx.rop.code.TranslationAdvice;
 import com.android.dx.ssa.Optimizer;
@@ -146,7 +147,7 @@ public class OptimizerOptions {
         int skipInsns
                 = skipRopMethod.getBlocks().getEffectiveInstructionCount();
 
-        System.err.printf(
+        DxConsole.err.printf(
                 "optimize step regs:(%d/%d/%.2f%%)"
                 + " insns:(%d/%d/%.2f%%)\n",
                 rmeth.getBlocks().getRegCount(),

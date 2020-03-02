@@ -16,16 +16,17 @@
 
 package com.android.dx.command.annotool;
 
+import com.android.dx.cf.attrib.AttRuntimeInvisibleAnnotations;
+import com.android.dx.cf.attrib.AttRuntimeVisibleAnnotations;
+import com.android.dx.cf.attrib.BaseAnnotations;
 import com.android.dx.cf.direct.ClassPathOpener;
 import com.android.dx.cf.direct.DirectClassFile;
 import com.android.dx.cf.direct.StdAttributeFactory;
-import com.android.dx.cf.iface.AttributeList;
 import com.android.dx.cf.iface.Attribute;
-import com.android.dx.cf.attrib.AttRuntimeInvisibleAnnotations;
-import com.android.dx.cf.attrib.BaseAnnotations;
-import com.android.dx.cf.attrib.AttRuntimeVisibleAnnotations;
-import com.android.dx.util.ByteArray;
+import com.android.dx.cf.iface.AttributeList;
+import com.android.dx.command.DxConsole;
 import com.android.dx.rop.annotation.Annotation;
+import com.android.dx.util.ByteArray;
 
 import java.io.File;
 import java.lang.annotation.ElementType;
@@ -205,7 +206,7 @@ class AnnotationLister {
                     matchPackages.add(packageName);
                     break;
                 case PACKAGE:
-                    System.out.println(packageName.replace('/','.'));
+                    DxConsole.out.println(packageName.replace('/','.'));
                     break;
             }
         }
@@ -225,7 +226,7 @@ class AnnotationLister {
                     classname =
                         cf.getThisClass().getClassType().getClassName();
                     classname = classname.replace('/','.');
-                    System.out.println(classname);
+                    DxConsole.out.println(classname);
                     break;
                 case INNERCLASS:
                     matchInnerClassesOf.add(

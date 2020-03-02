@@ -16,6 +16,7 @@
 
 package com.android.dx.dex.file;
 
+import com.android.dx.command.DxConsole;
 import com.android.dx.dex.code.DalvCode;
 import com.android.dx.dex.code.DalvInsnList;
 import com.android.dx.dex.code.LocalList;
@@ -28,8 +29,8 @@ import com.android.dx.rop.type.Type;
 import com.android.dx.util.ByteArrayByteInput;
 import com.android.dx.util.ByteInput;
 import com.android.dx.util.ExceptionWithContext;
-
 import com.android.dx.util.Leb128Utils;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -427,10 +428,10 @@ public class DebugInfoDecoder {
             validateEncode0(info, codeSize, countRegisters,
                     isStatic, ref, file, pl, ll);
         } catch (RuntimeException ex) {
-            System.err.println("instructions:");
-            insns.debugPrint(System.err, "  ", true);
-            System.err.println("local list:");
-            ll.debugPrint(System.err, "  ");
+            DxConsole.err.println("instructions:");
+            insns.debugPrint(DxConsole.err, "  ", true);
+            DxConsole.err.println("local list:");
+            ll.debugPrint(DxConsole.err, "  ");
             throw ExceptionWithContext.withContext(ex,
                     "while processing " + ref.toHuman());
         }
@@ -545,14 +546,14 @@ public class DebugInfoDecoder {
             int decodedAddress = decodedEntry.address;
 
             if (decodedEntry.reg != origEntry.getRegister()) {
-                System.err.println("local register mismatch at orig " + i +
+                DxConsole.err.println("local register mismatch at orig " + i +
                         " / decoded " + decodeAt);
                 problem = true;
                 break;
             }
 
             if (decodedEntry.isStart != origEntry.isStart()) {
-                System.err.println("local start/end mismatch at orig " + i +
+                DxConsole.err.println("local start/end mismatch at orig " + i +
                         " / decoded " + decodeAt);
                 problem = true;
                 break;
@@ -566,7 +567,7 @@ public class DebugInfoDecoder {
             if ((decodedAddress != origEntry.getAddress())
                     && !((decodedAddress == 0)
                             && (decodedEntry.reg >= paramBase))) {
-                System.err.println("local address mismatch at orig " + i +
+                DxConsole.err.println("local address mismatch at orig " + i +
                         " / decoded " + decodeAt);
                 problem = true;
                 break;
@@ -576,9 +577,9 @@ public class DebugInfoDecoder {
         }
 
         if (problem) {
-            System.err.println("decoded locals:");
+            DxConsole.err.println("decoded locals:");
             for (LocalEntry e : decodedLocals) {
-                System.err.println("  " + e);
+                DxConsole.err.println("  " + e);
             }
             throw new RuntimeException("local table problem");
         }
